@@ -393,7 +393,7 @@ class DeepGP(Model):
                     raise Exception("Unrecognizable flag for synchronization!")
         self._IN_OPTIMIZATION_ = False
         
-    def predict_withSamples(self, X, nSamples=100):
+    def predict_withSamples(self, X, nSamples=100, returnVar=False):
         
         y_mean, y_var = self.layers[-1].predict(X)
         y_samples = np.random.randn(nSamples,X.shape[0],y_mean.shape[1])*np.sqrt(y_var)+y_mean
@@ -403,7 +403,10 @@ class DeepGP(Model):
         y_samples = y_samples.reshape(nSamples, X.shape[0],-1)
         y_mean = y_samples.mean(0)
         y_var = y_samples.var(0)
-        # return as np array
+        
+        if returnVar:
+            return np.concatenate([y_mean, y_var], axis=-1)
+            
         return np.concatenate(y_mean, axis=-1)
         
     def predict_quantiles(self, X, quantiles=(2.5, 97.5), Y_metadata=None):
