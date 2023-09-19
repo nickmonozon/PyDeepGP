@@ -403,7 +403,7 @@ class DeepGP(Model):
         y_samples = y_samples.reshape(nSamples, X.shape[0],-1)
         y_mean = y_samples.mean(0)
         y_var = y_samples.var(0)
-        return y_mean, y_var
+        return np.concatenate(y_mean, axis=-1)
         
     def predict_quantiles(self, X, quantiles=(2.5, 97.5), Y_metadata=None):
         """
